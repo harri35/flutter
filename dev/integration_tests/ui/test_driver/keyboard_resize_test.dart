@@ -37,14 +37,22 @@ void main() {
       const Duration pollDelay300Ms = Duration(milliseconds: 300);
 
       bool heightTextDidShrink = false;
+      int retries = 0;
       for (int i = 0; i < 20; ++i) {
         await driver.tap(defaultTextField);
         await Future<void>.delayed(pollDelay300Ms);
         // Measure the height with keyboard displayed.
         final String heightWithKeyboardShown = await driver.getText(heightText);
         if (double.parse(heightWithKeyboardShown) < double.parse(startHeight)) {
+          if (retries > 0) {
+            print('>>> $retries retries were used to make this PASS.');
+          } else {
+            print('>>> No retries were used to make this PASS.');
+          }
           heightTextDidShrink = true;
           break;
+        } else {
+          retries += 1;
         }
       }
       expect(heightTextDidShrink, isTrue);
