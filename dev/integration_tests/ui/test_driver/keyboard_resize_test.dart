@@ -38,7 +38,7 @@ void main() {
 
       bool heightTextDidShrink = false;
       int retries = 0;
-      for (int i = 0; i < 20; ++i) {
+      while (true) {
         await driver.tap(defaultTextField);
         await Future<void>.delayed(pollDelay300Ms);
         // Measure the height with keyboard displayed.
