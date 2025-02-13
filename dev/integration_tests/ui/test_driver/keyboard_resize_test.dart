@@ -19,6 +19,8 @@ void main() {
     });
 
     test('Ensure keyboard dismissal resizes the view to original size', () async {
+      // Wait for 3 seconds before doing anything
+      await Future<void>.delayed(const Duration(seconds: 3));
       final SerializableFinder heightText = find.byValueKey(keys.kHeightText);
       await driver.waitFor(heightText);
 
@@ -28,6 +30,7 @@ void main() {
       // Focus the text field to show the keyboard.
       final SerializableFinder defaultTextField = find.byValueKey(keys.kDefaultTextField);
       await driver.waitFor(defaultTextField);
+      await driver.tap(defaultTextField);
 
       // The only practical way to detect the software keyboard opening or closing
       // is to use polling and wait for the layout to change.
@@ -38,8 +41,7 @@ void main() {
 
       bool heightTextDidShrink = false;
       int retries = 0;
-      while (true) {
-        await driver.tap(defaultTextField);
+      for (int i = 0; i < 20; ++i) {
         await Future<void>.delayed(pollDelay300Ms);
         // Measure the height with keyboard displayed.
         final String heightWithKeyboardShown = await driver.getText(heightText);
